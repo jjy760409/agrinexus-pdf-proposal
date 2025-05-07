@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>AgriNexus PDF 이메일 전송</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col justify-center items-center px-4">
+  <div class="w-full max-w-md bg-white shadow-md rounded-lg p-8 mt-12">
+    <h1 class="text-2xl font-bold text-center text-green-700 mb-2">📨 PDF 생성 + 이메일 전송</h1>
+    <p class="text-center text-sm text-gray-600 mb-6">PDF 보고서를 생성하고 이메일로 전송 요청합니다.</p>
+
+    <input id="username" type="text" placeholder="작성자 이름" class="w-full border border-gray-300 rounded px-4 py-2 mb-4" />
+    <input id="email" type="email" placeholder="받는 이메일 주소" class="w-full border border-gray-300 rounded px-4 py-2 mb-4" />
+    <textarea id="message" rows="4" placeholder="보고서 내용 요약 또는 메시지" class="w-full border border-gray-300 rounded px-4 py-2 mb-6"></textarea>
+
+    <form id="emailForm" action="https://formspree.io/f/xanojzna" method="POST">
+      <input type="hidden" name="message" id="formHiddenMessage" />
+      <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded transition duration-300" onclick="prepareAndSendPDF()">
+        📤 PDF 생성 + 이메일 전송
+      </button>
+    </form>
+
+    <p class="text-xs text-center text-gray-500 mt-4">※ 첨부파일은 브라우저에서 직접 다운로드되며, 입력된 내용은 이메일로 전송됩니다.</p>
+  </div>
+
+  <script>
+    function prepareAndSendPDF() {
+      const {{ jsPDF }} = window.jspdf;
+      const doc = new jsPDF();
+
+      const name = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const msg = document.getElementById("message").value;
+
+      doc.setFontSize(16);
+      doc.text("AgriNexus PDF 보고서", 20, 30);
+      doc.setFontSize(12);
+      doc.text("작성자: " + name, 20, 50);
+      doc.text("이메일: " + email, 20, 60);
+      doc.text("요약:", 20, 80);
+      doc.text(doc.splitTextToSize(msg, 160), 20, 90);
+      doc.text("감사합니다. 본 보고서는 자동 생성되었습니다.", 20, 270);
+
+      doc.save("AgriNexus_Report.pdf");
+
+      document.getElementById("formHiddenMessage").value =
+        "작성자: " + name + "\n요약: " + msg + "\n(사용자에게 PDF가 제공되었습니다)";
+    }
+  </script>
+</body>
+</html>
