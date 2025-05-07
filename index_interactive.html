@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>선택형 PDF 생성기</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function generateDynamicPDF() {
+      const {{ jsPDF }} = window.jspdf;
+      const doc = new jsPDF();
+
+      const name = document.getElementById("username").value;
+      const type = document.getElementById("reportType").value;
+      const date = document.getElementById("date").value;
+
+      let content = "";
+      if (type === "monthly") {
+        content = "이 문서는 월간 스마트팜 운영 보고서입니다.";
+      } else if (type === "quarter") {
+        content = "이 문서는 분기별 수익 분석 보고서입니다.";
+      } else if (type === "status") {
+        content = "이 문서는 현재 스마트팜 상태 현황 리포트입니다.";
+      } else if (type === "invest") {
+        content = "이 문서는 투자 제안 및 예상 수익 보고서입니다.";
+      }
+
+      doc.setFontSize(16);
+      doc.text("AgriNexus 자동 생성 PDF", 20, 30);
+      doc.setFontSize(12);
+      doc.text("작성자: " + name, 20, 50);
+      doc.text("작성일: " + date, 20, 60);
+      doc.text("유형: " + type, 20, 70);
+      doc.text(content, 20, 90);
+
+      doc.save("AgriNexus_Selected_Report.pdf");
+    }
+  </script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col justify-center items-center px-4">
+  <div class="w-full max-w-md bg-white shadow-md rounded-lg p-8 mt-12">
+    <h1 class="text-2xl font-bold text-center text-green-700 mb-2">🧠 AgriNexus 선택형 PDF 생성기</h1>
+    <p class="text-center text-sm text-gray-600 mb-6">선택한 유형에 따라 맞춤형 보고서 PDF가 생성됩니다.</p>
+
+    <input id="username" type="text" placeholder="작성자 이름" class="w-full border border-gray-300 rounded px-4 py-2 mb-4" />
+    <input id="date" type="text" placeholder="작성일 (예: 2024-06-01)" class="w-full border border-gray-300 rounded px-4 py-2 mb-4" />
+
+    <select id="reportType" class="w-full border border-gray-300 rounded px-4 py-2 mb-6">
+      <option value="monthly">📆 월간 운영 보고서</option>
+      <option value="quarter">📊 분기별 수익 분석</option>
+      <option value="status">🌿 스마트팜 현황 리포트</option>
+      <option value="invest">💰 투자 제안 보고서</option>
+    </select>
+
+    <button onclick="generateDynamicPDF()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded transition duration-300">
+      📥 선택형 보고서 생성하기
+    </button>
+  </div>
+</body>
+</html>
