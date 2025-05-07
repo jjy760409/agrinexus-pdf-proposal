@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>AgriNexus 전자서명 계약서 생성기</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col justify-center items-center px-4">
+  <div class="w-full max-w-md bg-white shadow-md rounded-lg p-8 mt-12">
+    <h1 class="text-2xl font-bold text-center text-green-700 mb-2">✍️ 전자서명 계약서 생성</h1>
+    <p class="text-center text-sm text-gray-600 mb-6">입력한 정보가 계약서 본문 및 하단 서명란에 자동 반영됩니다.</p>
+
+    <input id="name" type="text" placeholder="계약자 이름" class="w-full border border-gray-300 rounded px-4 py-2 mb-4" />
+    <input id="date" type="text" placeholder="계약일 (예: 2024-06-01)" class="w-full border border-gray-300 rounded px-4 py-2 mb-6" />
+
+    <button onclick="generateSignedPDF()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded transition duration-300">
+      📄 전자서명 계약서 PDF 생성하기
+    </button>
+  </div>
+
+  <script>
+    function generateSignedPDF() {
+      const {{ jsPDF }} = window.jspdf;
+      const doc = new jsPDF();
+
+      const name = document.getElementById("name").value;
+      const date = document.getElementById("date").value;
+
+      doc.setFontSize(16);
+      doc.text("AgriNexus 전자서명 계약서", 20, 30);
+      doc.setFontSize(12);
+      doc.text("본 계약은 AgriNexus 스마트팜 시스템 운영과 관련된 업무에 대한 사항을 다음과 같이 체결한다.", 20, 50);
+      doc.text("1. 계약 대상: 스마트팜 자동화 시스템 및 관련 소프트웨어", 20, 70);
+      doc.text("2. 계약 조건: 양 당사자 합의 하에 지속 운영 및 유지보수 포함", 20, 80);
+      doc.text("3. 기타 조항: 계약기간 중 발생하는 모든 데이터는 상호 공동 소유로 간주한다.", 20, 90);
+
+      // 전자서명 영역
+      doc.setFontSize(12);
+      doc.text("전자서명", 20, 240);
+      doc.setFont("helvetica", "bold");
+      doc.text("서명자: " + name, 20, 250);
+      doc.text("서명일: " + date, 20, 260);
+
+      doc.save("AgriNexus_Signed_Contract.pdf");
+    }
+  </script>
+</body>
+</html>
