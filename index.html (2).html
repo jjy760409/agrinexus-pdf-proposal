@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>AgriNexus 계약서 생성기</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function generateContractPDF() {
+      const {{ jsPDF }} = window.jspdf;
+      const doc = new jsPDF();
+
+      const name = document.getElementById("username").value;
+      const company = document.getElementById("company").value;
+      const duration = document.getElementById("duration").value;
+      const clause = document.getElementById("clause").value;
+
+      doc.setFontSize(16);
+      doc.text("AgriNexus 계약서", 20, 30);
+      doc.setFontSize(12);
+      doc.text("계약자 이름: " + name, 20, 50);
+      doc.text("회사/기관: " + company, 20, 60);
+      doc.text("계약 기간: " + duration, 20, 70);
+      doc.text("주요 조항:", 20, 90);
+      doc.text(doc.splitTextToSize(clause, 160), 20, 100);
+      doc.text("본 계약서는 상호 합의 하에 체결되었습니다.", 20, 270);
+
+      doc.save("AgriNexus_Contract.pdf");
+    }
+  </script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col justify-center items-center px-4">
+  <div class="w-full max-w-md bg-white shadow-md rounded-lg p-8 mt-12">
+    <h1 class="text-2xl font-bold text-center text-green-700 mb-2">📄 AgriNexus 계약서 자동 생성</h1>
+    <p class="text-center text-sm text-gray-600 mb-6">입력하신 정보로 계약서 PDF가 생성됩니다.</p>
+
+    <input id="username" type="text" placeholder="당신의 이름" class="w-full border border-gray-300 rounded px-4 py-2 mb-4" />
+    <input id="company" type="text" placeholder="회사명 또는 기관명" class="w-full border border-gray-300 rounded px-4 py-2 mb-4" />
+    <input id="duration" type="text" placeholder="계약 기간 (예: 2024.01.01 ~ 2024.12.31)" class="w-full border border-gray-300 rounded px-4 py-2 mb-4" />
+    <textarea id="clause" rows="4" placeholder="주요 계약 조항을 입력하세요" class="w-full border border-gray-300 rounded px-4 py-2 mb-6"></textarea>
+
+    <button onclick="generateContractPDF()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded transition duration-300">
+      📥 계약서 생성하기
+    </button>
+  </div>
+</body>
+</html>
