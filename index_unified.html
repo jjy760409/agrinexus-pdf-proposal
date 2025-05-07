@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>AgriNexus 통합 PDF 자동 생성기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    .tab { display: none; }
+    .tab.active { display: block; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+  <div class="max-w-4xl mx-auto py-8">
+    <h1 class="text-3xl font-bold text-center text-green-700 mb-6">🌱 AgriNexus 통합 PDF 자동 생성기</h1>
+    <div class="flex flex-wrap justify-center gap-2 mb-8">
+      <button onclick="switchTab('contract')" class="tab-btn bg-green-600 text-white px-4 py-2 rounded">📄 계약서</button>
+      <button onclick="switchTab('report')" class="tab-btn bg-green-600 text-white px-4 py-2 rounded">📊 보고서</button>
+      <button onclick="switchTab('email')" class="tab-btn bg-green-600 text-white px-4 py-2 rounded">📤 이메일 전송</button>
+      <button onclick="switchTab('interactive')" class="tab-btn bg-green-600 text-white px-4 py-2 rounded">🧠 선택형 보고서</button>
+      <button onclick="switchTab('signed')" class="tab-btn bg-green-600 text-white px-4 py-2 rounded">✍️ 전자서명</button>
+    </div>
+
+    <!-- 계약서 생성기 -->
+    <div id="contract" class="tab">
+      <h2 class="text-xl font-semibold text-green-700 mb-4">📄 계약서 생성기</h2>
+      <input id="cname" type="text" placeholder="계약자 이름" class="input" />
+      <input id="ccompany" type="text" placeholder="회사명" class="input" />
+      <input id="cduration" type="text" placeholder="계약 기간" class="input" />
+      <textarea id="cclause" placeholder="계약 조항" class="input" rows="4"></textarea>
+      <button onclick="generateContract()" class="btn">📥 계약서 PDF 생성</button>
+    </div>
+
+    <!-- 보고서 생성기 -->
+    <div id="report" class="tab">
+      <h2 class="text-xl font-semibold text-green-700 mb-4">📊 보고서 생성기</h2>
+      <input id="rtitle" type="text" placeholder="보고서 제목" class="input" />
+      <input id="rauthor" type="text" placeholder="작성자" class="input" />
+      <input id="rdate" type="text" placeholder="날짜" class="input" />
+      <textarea id="rsummary" placeholder="요약 내용" class="input" rows="3"></textarea>
+      <input id="rrev" type="number" placeholder="수익" class="input" />
+      <input id="rexp" type="number" placeholder="비용" class="input" />
+      <button onclick="generateReport()" class="btn">📥 보고서 PDF 생성</button>
+    </div>
+
+    <!-- 이메일 전송 생성기 -->
+    <div id="email" class="tab">
+      <h2 class="text-xl font-semibold text-green-700 mb-4">📤 이메일 PDF 전송기</h2>
+      <input id="ename" type="text" placeholder="작성자 이름" class="input" />
+      <input id="eemail" type="email" placeholder="이메일 주소" class="input" />
+      <textarea id="emsg" placeholder="요약 메시지" class="input" rows="4"></textarea>
+      <button onclick="generateEmailPDF()" class="btn">📤 PDF 생성 + 이메일 전송</button>
+    </div>
+
+    <!-- 선택형 보고서 생성기 -->
+    <div id="interactive" class="tab">
+      <h2 class="text-xl font-semibold text-green-700 mb-4">🧠 선택형 상세 보고서</h2>
+      <input id="iname" type="text" placeholder="작성자 이름" class="input" />
+      <input id="idate" type="text" placeholder="작성일" class="input" />
+      <select id="itype" class="input">
+        <option value="monthly">📆 월간 보고서</option>
+        <option value="quarter">📊 분기 분석</option>
+        <option value="status">🌿 운영 현황</option>
+        <option value="invest">💰 투자 제안</option>
+      </select>
+      <button onclick="generateInteractivePDF()" class="btn">📥 선택형 PDF 생성</button>
+    </div>
+
+    <!-- 전자서명 계약서 -->
+    <div id="signed" class="tab">
+      <h2 class="text-xl font-semibold text-green-700 mb-4">✍️ 전자서명 계약서</h2>
+      <input id="sname" type="text" placeholder="서명자 이름" class="input" />
+      <input id="sdate" type="text" placeholder="날짜" class="input" />
+      <button onclick="generateSignedPDF()" class="btn">📥 서명 계약서 생성</button>
+    </div>
+  </div>
+
+  <script>
+    const {{ jsPDF }} = window.jspdf;
+
+    function switchTab(id) {
+      document.querySelectorAll(".tab").forEach(el => el.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    function generateContract() {
+      const doc = new jsPDF();
+      doc.text("계약서", 20, 30);
+      doc.text("이름: " + document.getElementById("cname").value, 20, 40);
+      doc.text("회사: " + document.getElementById("ccompany").value, 20, 50);
+      doc.text("기간: " + document.getElementById("cduration").value, 20, 60);
+      doc.text("조항:", 20, 80);
+      doc.text(document.getElementById("cclause").value, 20, 90);
+      doc.save("Contract.pdf");
+    }
+
+    function generateReport() {
+      const doc = new jsPDF();
+      doc.text(document.getElementById("rtitle").value, 20, 30);
+      doc.text("작성자: " + document.getElementById("rauthor").value, 20, 40);
+      doc.text("날짜: " + document.getElementById("rdate").value, 20, 50);
+      doc.text("요약:", 20, 70);
+      doc.text(document.getElementById("rsummary").value, 20, 80);
+      const rev = parseInt(document.getElementById("rrev").value);
+      const exp = parseInt(document.getElementById("rexp").value);
+      doc.text("수익: " + rev + " / 비용: " + exp + " / 순이익: " + (rev - exp), 20, 100);
+      doc.save("Report.pdf");
+    }
+
+    function generateEmailPDF() {
+      const doc = new jsPDF();
+      doc.text("작성자: " + document.getElementById("ename").value, 20, 30);
+      doc.text("이메일: " + document.getElementById("eemail").value, 20, 40);
+      doc.text("메시지:", 20, 60);
+      doc.text(document.getElementById("emsg").value, 20, 70);
+      doc.save("EmailReport.pdf");
+    }
+
+    function generateInteractivePDF() {
+      const doc = new jsPDF();
+      const name = document.getElementById("iname").value;
+      const date = document.getElementById("idate").value;
+      const type = document.getElementById("itype").value;
+      let content = "";
+      if (type === "monthly") content = "월간 운영 현황 보고서입니다.";
+      if (type === "quarter") content = "분기별 수익 분석 보고서입니다.";
+      if (type === "status") content = "스마트팜 현재 상태 리포트입니다.";
+      if (type === "invest") content = "투자 제안 및 수익 모델 분석 보고서입니다.";
+      doc.text("작성자: " + name, 20, 30);
+      doc.text("날짜: " + date, 20, 40);
+      doc.text("유형: " + type, 20, 50);
+      doc.text(content, 20, 70);
+      doc.save("Custom_Report.pdf");
+    }
+
+    function generateSignedPDF() {
+      const doc = new jsPDF();
+      const name = document.getElementById("sname").value;
+      const date = document.getElementById("sdate").value;
+      doc.text("AgriNexus 전자서명 계약서", 20, 30);
+      doc.text("계약서 본문이 여기에 삽입됩니다.", 20, 50);
+      doc.text("서명자: " + name, 20, 250);
+      doc.text("날짜: " + date, 20, 260);
+      doc.save("Signed_Contract.pdf");
+    }
+  </script>
+
+  <style>
+    .input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; }
+    .btn { width: 100%; background: #2d7d46; color: white; padding: 10px; border-radius: 6px; }
+  </style>
+</body>
+</html>
