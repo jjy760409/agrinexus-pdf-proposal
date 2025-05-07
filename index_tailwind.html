@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>AgriNexus AI 제안서 생성</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    function generatePDF() {
+      const {{ jsPDF }} = window.jspdf;
+      const doc = new jsPDF();
+
+      const name = document.getElementById("username").value;
+      const company = document.getElementById("company").value;
+      const project = document.getElementById("project").value;
+
+      doc.setFontSize(16);
+      doc.text("AgriNexus AI 자동 제안서", 20, 30);
+      doc.setFontSize(12);
+      doc.text("이름: " + name, 20, 50);
+      doc.text("회사/기관: " + company, 20, 60);
+      doc.text("프로젝트 개요:", 20, 80);
+      doc.text(doc.splitTextToSize(project, 160), 20, 90);
+
+      doc.save("AgriNexus_Proposal.pdf");
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col justify-center items-center px-4">
+  <div class="w-full max-w-md bg-white shadow-md rounded-lg p-8 mt-12">
+    <h1 class="text-2xl font-bold text-center text-green-700 mb-2">📄 AgriNexus AI 제안서 자동 생성</h1>
+    <p class="text-center text-sm text-gray-600 mb-6">입력하신 정보로 자동 제안서 PDF가 생성됩니다.</p>
+
+    <input id="username" type="text" placeholder="당신의 이름" class="w-full border border-gray-300 rounded px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500" />
+    <input id="company" type="text" placeholder="회사명 또는 기관명" class="w-full border border-gray-300 rounded px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500" />
+    <textarea id="project" rows="4" placeholder="요청하는 프로젝트 개요" class="w-full border border-gray-300 rounded px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+
+    <button onclick="generatePDF()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded transition duration-300">
+      📥 제안서 생성하기
+    </button>
+
+    <p class="text-xs text-center text-gray-500 mt-4">⚙️ PDF 생성이 되지 않을 경우, 브라우저에서 팝업/다운로드 차단이 꺼져 있는지 확인해주세요.</p>
+  </div>
+</body>
+</html>
